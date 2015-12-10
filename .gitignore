@@ -3,6 +3,15 @@
 *.uvgui*
 *.plg
 *.dep
-*.lst
 *.map
 *.uvopt*
+*.bin
+*.elf
+*.hex
+*.lst
+*.map
+*.o
+*.hex
+*.elf
+*.a
+*.prefs
