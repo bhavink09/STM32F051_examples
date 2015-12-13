@@ -88,8 +88,8 @@ int main(void)
   usart1_init();
   usart2_init();
   
-  // Select BT for usart2 on wsn channel mux
-  wsn_select_bt();
+  // Select GPS for usart2 on wsn channel mux
+  wsn_select_gps();
   
 	usart1_puts("STM32F051\r\n");	
 	usart1_puts("GPS TEST\r\n");
