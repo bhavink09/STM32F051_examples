@@ -9,9 +9,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define ROUTER_NAME "XT1562"
-#define ROUTER_PASSWORD "bhavinkamdar"
-
 int8_t wifi_init()
 {
   char rcv_buf[128];
@@ -30,11 +27,30 @@ int8_t wifi_init()
   {
     return WIFI_ERROR;
   }
+  return WIFI_SUCCESS;
+}
+
+int8_t wifi_connect_router(char* ssid, char* password)
+{
+  char rcv_buf[128];
+  const char* cmd = "CWJAP=\"";
+  uint32_t ssid_size = strlen(ssid);
+  uint32_t password_size = strlen(password);
+  uint32_t cmd_size = strlen(cmd);
+  char* buf = malloc(ssid_size + password_size + cmd_size + 6);
   
-  if(at_send_receive("CWJAP=\""ROUTER_NAME"\",\""ROUTER_PASSWORD"\"", rcv_buf, sizeof(rcv_buf)) == AT_ERROR)
+  strcpy(buf, cmd);
+  strcpy(&buf[cmd_size], ssid);
+  strcpy(&buf[cmd_size + ssid_size], "\",\"");
+  strcpy(&buf[cmd_size + ssid_size + 3], password);
+  strcpy(&buf[cmd_size + ssid_size + 3 + password_size], "\"\0");
+  
+  if(at_send_receive(buf, rcv_buf, sizeof(rcv_buf)) == AT_ERROR)
   {
+    free(buf);
     return WIFI_ERROR;
   }
+  free(buf);
   return WIFI_SUCCESS;
 }
 

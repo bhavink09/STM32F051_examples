@@ -7,6 +7,7 @@ void usart1_rcv_interrupt_en(void);
 void usart1_putch(char data);
 void usart1_puts(const char* str);
 void usart1_puti(int32_t data, uint8_t digits);
+char usart1_getch(void);
 
 void usart2_init(void);
 void usart2_rcv_interrupt_en(void);
