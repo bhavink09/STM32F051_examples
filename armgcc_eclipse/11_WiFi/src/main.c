@@ -70,6 +70,8 @@ int main(void)
 {
   char *lat = "18.9132062";
   char *lon = "72.8152144";
+  char ssid[32];
+  char pwd[32];
   uint32_t cnt;
   uint32_t i;
   uint8_t is_match = 0;
@@ -117,6 +119,34 @@ int main(void)
   }
   
   usart1_puts("Wifi init done\r\n");
+  usart1_puts("Enter router id: ");
+  cnt = 0;
+  do
+  {
+    ssid[cnt] = usart1_getch();
+    usart1_putch(ssid[cnt]);
+  }while(ssid[cnt++] != '\r');
+  ssid[cnt - 1] = 0;
+  
+  usart1_puts("\r\nEnter password: ");
+  cnt = 0;
+  do
+  {
+    pwd[cnt] = usart1_getch();
+    usart1_putch('*');
+  }while(pwd[cnt++] != '\r');
+  pwd[cnt - 1] = 0;
+  
+  usart1_puts("\r\n");
+  
+  if(wifi_connect_router(ssid, pwd) == WIFI_ERROR)
+  {
+    usart1_puts("Error connecting to router\r\n");
+    while(1);
+  }
+  usart1_puts("Connected to ");
+  usart1_puts(ssid);
+  usart1_puts("\r\n");
   
   if(wifi_open_conn("TCP", GOOGLE_API_IP, "80") == WIFI_ERROR)
   {

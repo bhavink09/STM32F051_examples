@@ -56,7 +56,7 @@ void usart1_init(void)
     gpioa_init_struct.GPIO_OType = GPIO_OType_PP;
     gpioa_init_struct.GPIO_PuPd = GPIO_PuPd_UP;
     GPIO_Init(GPIOA, &gpioa_init_struct);
-    /* GPIOA PIN9 alternative function Rx */
+    /* GPIOA PIN10 alternative function Rx */
     gpioa_init_struct.GPIO_Pin = GPIO_Pin_10;
     gpioa_init_struct.GPIO_Speed = GPIO_Speed_50MHz;
     gpioa_init_struct.GPIO_Mode = GPIO_Mode_AF;
@@ -75,17 +75,23 @@ void usart1_init(void)
     usart1_init_struct.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
     /* Configure USART1 */
     USART_Init(USART1, &usart1_init_struct);
-
+    
     /* Enable USART1 */
     USART_Cmd(USART1, ENABLE);
 }
 
 void usart1_rcv_interrupt_en()
 {
+  NVIC_InitTypeDef NVIC_InitStructure;
 	/* Enable RXNE interrupt */
-    USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+  USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+  USART_ITConfig(USART1, USART_IT_TXE, DISABLE);
+  
     /* Enable USART1 global interrupt */
-    NVIC_EnableIRQ(USART1_IRQn);
+  NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
+  NVIC_InitStructure.NVIC_IRQChannelPriority = 0;  
+  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+  NVIC_Init(&NVIC_InitStructure);    
 }
 
 void usart1_putch(char data)
@@ -108,6 +114,12 @@ void usart1_puti(int32_t data, uint8_t digits)
 	char buffer[11];
 	int_to_str(data, digits, buffer, sizeof(buffer));
 	usart1_puts(buffer);
+}
+
+char usart1_getch()
+{
+  while(USART_GetFlagStatus(USART1, USART_FLAG_RXNE) == RESET);
+  return (char)USART_ReceiveData(USART1);
 }
 /****************************************************************************/
 
