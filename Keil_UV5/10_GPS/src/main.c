@@ -75,11 +75,11 @@ int main(void)
 	GPIOA->MODER &= ~(3 << 0);
   
   // Make PORTC.4,.5,.6,.7 as output for select line
-  WSN_PORT->MODER |= ((1 << WSN_GPS_PIN) | (1 << WSN_WIFI_PIN) | 
-                      (1 << WSN_BT_PIN)  | (1 << WSN_ZBEE_PIN));
+  WSN_PORT->MODER |= ((1 << (WSN_GPS_PIN * 2)) | (1 << (WSN_WIFI_PIN * 2)) | 
+                      (1 << (WSN_BT_PIN * 2))  | (1 << (WSN_ZBEE_PIN * 2)));
   
-  WSN_PORT->PUPDR |= ((2 << (WSN_GPS_PIN * 2)) | (2 << (WSN_WIFI_PIN * 2)) | 
-                      (2 << (WSN_BT_PIN * 2))  | (2 << (WSN_ZBEE_PIN * 2)));
+  WSN_PORT->PUPDR |= ((1 << (WSN_GPS_PIN * 2)) | (1 << (WSN_WIFI_PIN * 2)) | 
+                      (1 << (WSN_BT_PIN * 2))  | (1 << (WSN_ZBEE_PIN * 2)));
 
 	// This configures interrupt such that SysTick_Handler is called
 	// at ever TIMER_TICK_HZ i.e. 1/1000 = 1ms
